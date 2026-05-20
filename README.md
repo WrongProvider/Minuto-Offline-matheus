@@ -2,6 +2,9 @@
 
 Protótipo funcional em React Native do app Minuto Offline.
 
+https://github.com/user-attachments/assets/902c3179-5ad5-4b83-b70e-44d54b08dc40
+
+
 ## Estrutura de arquivos
 
 ```
