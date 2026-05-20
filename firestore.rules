@@ -1,0 +1,67 @@
+rules_version = '2';
+
+// Regras de segurança Firestore — Minuto Offline
+// Documentação: docs/architecture/data-model.md
+// Deploy: firebase deploy --only firestore:rules
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helpers ───────────────────────────────────────────────────────────
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function validSessionDuration() {
+      return request.resource.data.durationMs is int
+        && request.resource.data.durationMs > 0
+        && request.resource.data.durationMs <= 86400000; // 24h
+    }
+
+    function validLeaderboardIncrement() {
+      // Apenas incremento em totalMs via merge/update controlado
+      return request.resource.data.totalMs is int
+        && request.resource.data.totalMs >= 0;
+    }
+
+    // ─── Perfil do usuário ─────────────────────────────────────────────────
+
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(uid);
+      allow delete: if isOwner(uid);
+
+      match /sessions/{sessionId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) && validSessionDuration();
+        allow update, delete: if false; // imutável após criação (MVP)
+      }
+    }
+
+    // ─── Ranking diário ────────────────────────────────────────────────────
+
+    match /leaderboards/daily/{dateKey}/users/{uid} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(uid) && validLeaderboardIncrement();
+      allow delete: if isOwner(uid);
+    }
+
+    // ─── Ranking geral ─────────────────────────────────────────────────────
+
+    match /leaderboards/allTime/users/{uid} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(uid) && validLeaderboardIncrement();
+      allow delete: if isOwner(uid);
+    }
+
+    // Bloqueia qualquer outro path
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

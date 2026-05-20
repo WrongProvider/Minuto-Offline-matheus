@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "minuto-offline-dev",
+    "staging": "minuto-offline-stg",
+    "prod": "minuto-offline-prod"
+  }
+}

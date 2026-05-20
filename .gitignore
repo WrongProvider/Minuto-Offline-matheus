@@ -66,6 +66,9 @@ yarn-error.log
 # testing
 /coverage
 
+# Firebase (copiar .firebaserc.example → .firebaserc localmente)
+.firebaserc
+
 # Yarn
 .yarn/*
 !.yarn/patches
