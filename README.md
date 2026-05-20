@@ -2,6 +2,8 @@
 
 Protótipo funcional em React Native do app Minuto Offline.
 
+https://github.com/user-attachments/assets/902c3179-5ad5-4b83-b70e-44d54b08dc40
+
 ## Documentação de arquitetura
 
 A documentação TOGAF (negócio, dados, aplicação, tecnologia, C4, ADRs, segurança e ops) está em **[`docs/`](docs/README.md)**.
@@ -11,6 +13,7 @@ Artefatos de infraestrutura:
 - [`firestore.rules`](firestore.rules) — regras de segurança Firestore
 - [`firebase.json`](firebase.json) — configuração Firebase CLI
 - [`.firebaserc.example`](.firebaserc.example) — template de projetos Firebase
+=======
 
 ## Estrutura de arquivos
 
