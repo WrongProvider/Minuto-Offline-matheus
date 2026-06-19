@@ -46,7 +46,9 @@ export function useOfflineTimer() {
       intervalRef.current = null;
     }
 
-    const finalMs = startTimeRef.current ? Date.now() - startTimeRef.current : 0;
+    const finalMs = startTimeRef.current
+      ? Date.now() - startTimeRef.current
+      : 0;
     const now = new Date();
     const startLabel = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
     const duration = msToHMS(finalMs);
@@ -72,6 +74,16 @@ export function useOfflineTimer() {
     }
   }, [isOffline, startOffline, stopOffline]);
 
+  const invalidateSession = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setIsOffline(false);
+    setElapsedMs(0);
+    startTimeRef.current = null;
+  }, []);
+
   return {
     isOffline,
     elapsedMs,
@@ -79,5 +91,6 @@ export function useOfflineTimer() {
     sessionCount,
     history,
     toggle,
+    invalidateSession,
   };
 }
